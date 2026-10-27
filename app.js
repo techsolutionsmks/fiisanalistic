@@ -18,12 +18,13 @@ const ALL_MARKET_FIIS = [
 ];
 
 const INITIAL_CARTEIRA = [
-    { ticker: 'GARE11', setor: 'Tijolo', quantidade: 37, precoMedio: 8.37, proventoMensal: 0.087 },
-    { ticker: 'TGAR11', setor: 'Desenvolvimento', quantidade: 4, precoMedio: 70.53, proventoMensal: 1.10 },
-    { ticker: 'XPSF11', setor: 'FoF', quantidade: 34, precoMedio: 6.76, proventoMensal: 0.075 },
-    { ticker: 'MXRF11', setor: 'Papel', quantidade: 17, precoMedio: 9.87, proventoMensal: 0.09 },
-    { ticker: 'CPTS11', setor: 'Papel', quantidade: 7, precoMedio: 8.00, proventoMensal: 0.07 },
-    { ticker: 'VINO11', setor: 'Tijolo', quantidade: 6, precoMedio: 5.14, proventoMensal: 0.045 }
+    { ticker: 'GARE11', setor: 'Tijolo', quantidade: 120, precoMedio: 8.35, proventoMensal: 0.087 },
+    { ticker: 'CPTS11', setor: 'Papel', quantidade: 82, precoMedio: 7.34, proventoMensal: 0.07 },
+    { ticker: 'MXRF11', setor: 'Papel', quantidade: 68, precoMedio: 9.11, proventoMensal: 0.09 },
+    { ticker: 'XPSF11', setor: 'FoF', quantidade: 34, precoMedio: 6.40, proventoMensal: 0.075 },
+    { ticker: 'VINO11', setor: 'Tijolo', quantidade: 6, precoMedio: 4.26, proventoMensal: 0.045 },
+    { ticker: 'XPML11', setor: 'Shopping', quantidade: 5, precoMedio: 100.20, proventoMensal: 0.92 },
+    { ticker: 'TGAR11', setor: 'Desenvolvimento', quantidade: 5, precoMedio: 43.10, proventoMensal: 1.10 }
 ];
 
 const INITIAL_WATCHLIST = [
