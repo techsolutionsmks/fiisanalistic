@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MKS Tech Solutions - FII Real-Time Platform</title>
+  <title>MKS Tech Solutions - FII Real-Time Platform V7.0</title>
   
   <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -36,6 +36,21 @@
         <button class="nav-btn" onclick="switchTab('carteira')">
           <i class="fa-solid fa-wallet"></i>
           <span>Minha Carteira</span>
+        </button>
+
+        <button class="nav-btn" onclick="switchTab('proventos-historico')">
+          <i class="fa-solid fa-piggy-bank"></i>
+          <span>Proventos Recebidos</span>
+        </button>
+
+        <button class="nav-btn" onclick="switchTab('rebalance')">
+          <i class="fa-solid fa-scale-balanced"></i>
+          <span>Rebalanceamento</span>
+        </button>
+
+        <button class="nav-btn" onclick="switchTab('simulator')">
+          <i class="fa-solid fa-calculator"></i>
+          <span>Simulador Bola de Neve</span>
         </button>
 
         <button class="nav-btn" onclick="switchTab('comparativo')">
@@ -144,7 +159,7 @@
 
           <div class="card mt-24">
             <div class="card-header">
-              <h3><i class="fa-solid fa-table-list"></i> Resumo Rápido de Dividendos</h3>
+              <h3><i class="fa-solid fa-table-list"></i> Resumo Rápido de Dividendos (Clique para ordenar)</h3>
             </div>
             <div class="table-responsive">
               <table class="data-table">
@@ -195,6 +210,143 @@
                 </thead>
                 <tbody id="carteira-table-body"></tbody>
               </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ABA NUEVA: PROVENTOS RECEBIDOS (HISTÓRICO REAL) -->
+        <section id="tab-proventos-historico" class="tab-panel">
+          <div class="card mb-24 flex-between">
+            <div>
+              <h3><i class="fa-solid fa-piggy-bank"></i> Registro de Dividendos Recebidos</h3>
+              <p class="text-muted mt-5">Acompanhe e registre todos os proventos caindo na sua conta corrente.</p>
+            </div>
+            <button class="btn btn-primary" onclick="openProventoModal()">
+              <i class="fa-solid fa-plus"></i> Lançar Provento
+            </button>
+          </div>
+
+          <div class="grid-2 mb-24">
+            <div class="card">
+              <h3><i class="fa-solid fa-chart-line"></i> Evolução de Dividendos Recebidos</h3>
+              <div class="chart-container mt-15">
+                <canvas id="chart-historico-proventos-recebidos"></canvas>
+              </div>
+            </div>
+
+            <div class="card flex-between" style="flex-direction: column; align-items: flex-start;">
+              <div>
+                <h3><i class="fa-solid fa-coins"></i> Total Acumulado Recebido</h3>
+                <h2 id="total-historico-recebido" style="color: var(--accent-green); font-family: var(--font-mono); font-size: 32px; margin-top: 15px;">R$ 0,00</h2>
+                <p class="text-muted mt-10">Média mensal recebida: <strong id="media-mensal-recebida" style="color: var(--text-main);">R$ 0,00</strong></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3><i class="fa-solid fa-receipt"></i> Extrato de Recebimentos</h3>
+            <div class="table-responsive mt-15">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Data Com/Pagamento</th>
+                    <th>Ticker</th>
+                    <th>Valor por Cota</th>
+                    <th>Qtd Cotas</th>
+                    <th>Total Recebido</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="proventos-extrato-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ABA: REBALANCEAMENTO SETORIAL -->
+        <section id="tab-rebalance" class="tab-panel">
+          <div class="card mb-24 bg-gradient">
+            <h3><i class="fa-solid fa-scale-balanced"></i> Rebalanceamento Inteligente por Setor</h3>
+            <p class="text-muted mt-5">
+              Digite quanto dinheiro você pretende aportar neste mês. O algoritmo calculará a divergência em relação às suas metas de setor e indicará onde colocar seu capital.
+            </p>
+            <div class="controls-row mt-15">
+              <label>Novo Aporte Disponível (R$):</label>
+              <input type="number" id="rebalance-valor-aporte" value="1000" step="100" style="padding: 8px 12px; border-radius: 6px; background: var(--bg-main); border: 1px solid var(--border-color); color: var(--primary-cyan); font-weight: 700; width: 140px;" oninput="calcularRebalanceamento()">
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="card">
+              <h3><i class="fa-solid fa-sliders"></i> Metas de Alocação (%)</h3>
+              <div id="rebalance-inputs-container" class="mt-15" style="display: flex; flex-direction: column; gap: 12px;"></div>
+            </div>
+
+            <div class="card">
+              <h3><i class="fa-solid fa-bullseye"></i> Recomendação de Aporte</h3>
+              <div class="table-responsive mt-15">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Setor</th>
+                      <th>Atual (%)</th>
+                      <th>Meta (%)</th>
+                      <th>Sugestão de Aporte</th>
+                    </tr>
+                  </thead>
+                  <tbody id="rebalance-results-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ABA: SIMULADOR BOLA DE NEVE -->
+        <section id="tab-simulator" class="tab-panel">
+          <div class="card mb-24">
+            <h3><i class="fa-solid fa-calculator"></i> Simulador de Juros Compostos & Bola de Neve</h3>
+            <p class="text-muted mt-5">Projete o crescimento do seu patrimônio com o reinvestimento 100% automático dos dividendos.</p>
+            
+            <div class="form-row mt-20">
+              <div class="form-group">
+                <label>Aporte Mensal Adicional (R$)</label>
+                <input type="number" id="sim-aporte-mensal" value="500" step="50" oninput="runSimulation()">
+              </div>
+              <div class="form-group">
+                <label>Horizonte de Tempo (Anos)</label>
+                <select id="sim-anos" onchange="runSimulation()">
+                  <option value="1">1 Ano</option>
+                  <option value="3">3 Anos</option>
+                  <option value="5" selected>5 Anos</option>
+                  <option value="10">10 Anos</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="card">
+              <h3><i class="fa-solid fa-chart-column"></i> Evolução Patrimonial Projetada</h3>
+              <div class="chart-container mt-15">
+                <canvas id="chart-simulacao"></canvas>
+              </div>
+            </div>
+
+            <div class="card flex-between" style="flex-direction: column; align-items: flex-start;">
+              <div>
+                <h3><i class="fa-solid fa-flag-checkered"></i> Resultado da Projeção</h3>
+                <div class="mt-20">
+                  <span class="text-muted">Patrimônio Acumulado Estimado:</span>
+                  <h2 id="sim-total-patrimonio" style="color: var(--primary-cyan); font-family: var(--font-mono); font-size: 28px;">R$ 0,00</h2>
+                </div>
+                <div class="mt-15">
+                  <span class="text-muted">Renda Passiva Mensal Estimada:</span>
+                  <h3 id="sim-total-renda" style="color: var(--accent-green); font-family: var(--font-mono); font-size: 22px;">R$ 0,00 / mês</h3>
+                </div>
+              </div>
+              <p class="text-muted" style="font-size: 12px; margin-top: 20px;">
+                *Considera o Yield On Cost médio atual da sua carteira reinvestindo todos os dividendos.
+              </p>
             </div>
           </div>
         </section>
@@ -270,6 +422,9 @@
                 <button class="btn btn-outline" onclick="exportData()">
                   <i class="fa-solid fa-download"></i> Exportar Carteira (.json)
                 </button>
+                <button class="btn btn-primary" onclick="exportToCSV()">
+                  <i class="fa-solid fa-file-excel"></i> Exportar Relatório (Excel / CSV)
+                </button>
                 <label class="btn btn-secondary">
                   <i class="fa-solid fa-upload"></i> Importar Backup
                   <input type="file" id="import-file" accept=".json" onchange="importData(event)" style="display: none;">
@@ -316,7 +471,12 @@
         <div class="form-row">
           <div class="form-group">
             <label>Quantidade de Cotas</label>
-            <input type="number" id="input-qtd" min="1" required placeholder="Ex: 10">
+            <div style="display: flex; gap: 6px;">
+              <input type="number" id="input-qtd" min="1" required placeholder="Ex: 10" style="flex: 1;">
+              <button type="button" class="btn btn-outline btn-sm" onclick="addQtd(1)">+1</button>
+              <button type="button" class="btn btn-outline btn-sm" onclick="addQtd(10)">+10</button>
+              <button type="button" class="btn btn-outline btn-sm" onclick="addQtd(50)">+50</button>
+            </div>
           </div>
           <div class="form-group">
             <label>Preço Médio / Pago por Cota (R$)</label>
@@ -332,6 +492,43 @@
         <div class="modal-actions">
           <button type="button" class="btn btn-outline" onclick="closeAporteModal()">Cancelar</button>
           <button type="submit" class="btn btn-primary">Salvar Aporte</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL DE PROVENTO RECEBIDO -->
+  <div class="modal" id="modal-provento">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-receipt"></i> Registrar Provento Recebido</h3>
+        <button class="close-btn" onclick="closeProventoModal()">&times;</button>
+      </div>
+      <form id="form-provento" onsubmit="saveProventoRecebido(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Data de Pagamento</label>
+            <input type="date" id="prov-data" required>
+          </div>
+          <div class="form-group">
+            <label>Ticker do FII</label>
+            <input type="text" id="prov-ticker" list="fiis-datalist" required placeholder="Ex: MXRF11" style="text-transform: uppercase;" onchange="autoFillProventoParams(this.value)">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Qtd de Cotas na Data Com</label>
+            <input type="number" id="prov-qtd" min="1" required placeholder="Ex: 100">
+          </div>
+          <div class="form-group">
+            <label>Valor Pago por Cota (R$)</label>
+            <input type="number" step="0.001" id="prov-val-cota" required placeholder="Ex: 0.10">
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" onclick="closeProventoModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Registrar Pagamento</button>
         </div>
       </form>
     </div>
@@ -374,4 +571,4 @@
 
   <script src="app.js"></script>
 </body>
-</html>     
+</html>
